@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
 import { User, UserModel } from "../models/userModel";
-import { generateToken, isAuth } from "../utils";
+import { isAuth } from "../utils";
 import { io, userSocketMap } from "..";
 
 export const userRouter = express.Router();
@@ -15,10 +15,16 @@ userRouter.post(
     }).lean<User>();
     if (user) {
       if (bcrypt.compareSync(req.body.password, user.password)) {
-        const { password, ...userExceptPassword } = user;
+        const { _id, name, email } = user;
+        if (_id) {
+          req.session.user = { _id: _id.toString(), name, email };
+        }
         res.json({
-          user: userExceptPassword,
-          token: generateToken(user),
+          user: {
+            _id: user._id?.toString(),
+            name: user.name,
+            email: user.email,
+          },
         });
         return;
       }
@@ -46,9 +52,22 @@ userRouter.post(
       profileImage: req.body.image,
     });
     const { password, ...userExceptPassword } = user.toObject();
+    req.session.user = userExceptPassword;
     res.json({
       user: userExceptPassword,
-      token: generateToken(user),
+    });
+  })
+);
+
+userRouter.post(
+  "/signout",
+  asyncHandler(async (req: Request, res: Response) => {
+    req.session.destroy((err) => {
+      if (err) {
+        res.status(500).json({ message: "Failed to destroy session" });
+      } else {
+        res.json({ message: "Signed out successfully" });
+      }
     });
   })
 );

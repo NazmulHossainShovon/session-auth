@@ -9,6 +9,8 @@ import { searchRouter } from "./routers/searchRouter";
 import s3Router from "./routers/s3Router";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import session from "express-session";
+import connectMongoDBSession from "connect-mongodb-session";
 
 export const userSocketMap = new Map<string, string>();
 
@@ -23,6 +25,12 @@ mongoose
     console.log("error mongodb");
   });
 
+const MongoDBStore = connectMongoDBSession(session);
+const store = new MongoDBStore({
+  uri: MONGODB_URI,
+  collection: "sessions",
+});
+
 const app = express();
 const httpServer = createServer(app);
 export const io = new Server(httpServer, {
@@ -34,6 +42,23 @@ export const io = new Server(httpServer, {
     methods: ["GET", "POST"],
   },
 });
+
+app.set("trust proxy", 1);
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "supersecret",
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    },
+  })
+);
+
 app.use(
   cors({
     credentials: true,

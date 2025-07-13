@@ -2,12 +2,17 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 declare namespace Express {
   export interface Request {
+    session: {
+      user?: {
+        _id: string;
+        name: string;
+        email: string;
+      };
+    } & import("express-session").Session;
     user: {
-      _id: string
-      name: string
-      email: string
-      isAdmin: boolean
-      token: string
-    }
+      _id: string;
+      name: string;
+      email: string;
+    };
   }
 }
