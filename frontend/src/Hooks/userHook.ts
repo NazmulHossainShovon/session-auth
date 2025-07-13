@@ -2,6 +2,11 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { People, User } from '../Types/types';
 import apiClient from '../ApiClient';
 
+export const fetchCurrentUser = async () => {
+  const response = await apiClient.get('/api/users/current');
+  return response.data;
+};
+
 export const useSignupMutation = () =>
   useMutation({
     mutationFn: async (userInfo: {
@@ -42,10 +47,15 @@ export const useGetUserInfo = (userName: string | undefined) =>
   useQuery({
     queryKey: ['user', userName],
     queryFn: async () => {
-      const res = await apiClient.get<User>('api/users', {
-        params: { userName },
-      });
-      return res.data;
+      if (userName) {
+        const res = await apiClient.get<User>('api/users', {
+          params: { userName },
+        });
+        return res.data;
+      } else {
+        const res = await apiClient.get<User>('api/users/current');
+        return res.data;
+      }
     },
   });
 
