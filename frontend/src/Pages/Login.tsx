@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import Input from '../Components/Input';
 import { Button } from '../Components/Button';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -9,7 +9,6 @@ import { Box, LinearProgress } from '@mui/material';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
 import { AxiosError } from 'axios';
-import { fetchCurrentUser } from '../Hooks/userHook';
 
 interface FormData {
   email: string;
@@ -22,22 +21,6 @@ export default function Login() {
   const { dispatch } = useContext(Store);
   const navigate = useNavigate();
   const { toast } = useToast();
-
-  useEffect(() => {
-    const checkCurrentUser = async () => {
-      try {
-        const user = await fetchCurrentUser();
-        if (user) {
-          dispatch({ type: 'sign-in', payload: user });
-          navigate('/');
-        }
-      } catch (error) {
-        // User is not logged in, or an error occurred, which is fine for the login page.
-        console.error('Error checking current user:', error);
-      }
-    };
-    checkCurrentUser();
-  }, [dispatch, navigate]);
 
   const formDataHandle: SubmitHandler<FormData> = async (data: {
     email: string;

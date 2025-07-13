@@ -6,6 +6,7 @@ import Login from './Pages/Login';
 import Home from './Pages/Home';
 import Search from './Pages/Search';
 import ProtectedRoute from './Components/ProtectedRoute';
+import PublicOnlyRoute from './Components/PublicOnlyRoute';
 
 const App: React.FC = () => {
   return (
@@ -18,8 +19,10 @@ const App: React.FC = () => {
         </Route>
 
         <Route path="search/:searchQuery" element={<Search />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+        <Route element={<PublicOnlyRoute />}>
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
