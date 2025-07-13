@@ -12,7 +12,10 @@ export const useSignupMutation = () =>
     }) => {
       const res = await apiClient.post<{ user: User; token: string }>(
         'api/users/signup',
-        userInfo
+        userInfo,
+        {
+          withCredentials: true,
+        }
       );
       return res.data;
     },
@@ -32,6 +35,9 @@ export const useSigninMutation = () =>
         {
           email,
           password,
+        },
+        {
+          withCredentials: true,
         }
       );
       return res.data;
@@ -44,6 +50,7 @@ export const useGetUserInfo = (userName: string | undefined) =>
     queryFn: async () => {
       const res = await apiClient.get<User>('api/users', {
         params: { userName },
+        withCredentials: true,
       });
       return res.data;
     },
@@ -55,6 +62,7 @@ export const useSearchUsers = (query: string) =>
     queryFn: async () => {
       const res = await apiClient.get<People[]>('api/search', {
         params: { query },
+        withCredentials: true,
       });
       return res.data;
     },
@@ -69,10 +77,14 @@ export const useSendFriendRequest = () => {
       sender: string;
       receiver: string | undefined;
     }) => {
-      const res = await apiClient.put<User>('api/users/friendRequest', {
-        sender,
-        receiver,
-      });
+      const res = await apiClient.put<User>(
+        'api/users/friendRequest',
+        {
+          sender,
+          receiver,
+        },
+        { withCredentials: true }
+      );
       return res.data;
     },
   });
@@ -92,7 +104,8 @@ export const useCancelFriendRequest = () => {
         {
           sender,
           receiver,
-        }
+        },
+        { withCredentials: true }
       );
       return res.data;
     },
@@ -108,10 +121,14 @@ export const useAcceptFriendRequest = () => {
       sender: string | undefined;
       receiver: string;
     }) => {
-      const res = await apiClient.put<User>('api/users/acceptRequest', {
-        sender,
-        receiver,
-      });
+      const res = await apiClient.put<User>(
+        'api/users/acceptRequest',
+        {
+          sender,
+          receiver,
+        },
+        { withCredentials: true }
+      );
       return res.data;
     },
   });
@@ -126,10 +143,14 @@ export const useUnfriend = () => {
       user1: string;
       user2: string | undefined;
     }) => {
-      const res = await apiClient.put('api/users/unfriend', {
-        user1,
-        user2,
-      });
+      const res = await apiClient.put(
+        'api/users/unfriend',
+        {
+          user1,
+          user2,
+        },
+        { withCredentials: true }
+      );
       return res.data;
     },
   });

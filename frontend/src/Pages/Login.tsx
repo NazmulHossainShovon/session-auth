@@ -29,7 +29,7 @@ export default function Login() {
     try {
       const res = await signin(data);
       dispatch({ type: 'sign-in', payload: res.user });
-      localStorage.setItem('user-token', res.token);
+
       navigate('/');
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;

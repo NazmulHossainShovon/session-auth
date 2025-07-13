@@ -25,7 +25,7 @@ type Action =
 const reducer = (state: AppState, action: Action): AppState => {
   switch (action.type) {
     case 'sign-in':
-      localStorage.setItem('user-info', JSON.stringify(action.payload));
+      
       socket.emit('storeUser', action.payload.name);
       return { ...state, userInfo: action.payload };
     case 'sign-out':
@@ -67,11 +67,7 @@ const Store = createContext({
 function StoreProvider(props: PropsWithChildren) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  useEffect(() => {
-    if (state.userInfo.name) {
-      localStorage.setItem('user-info', JSON.stringify(state.userInfo));
-    }
-  }, [state]);
+  
 
   return <Store.Provider value={{ state, dispatch }} {...props} />;
 }

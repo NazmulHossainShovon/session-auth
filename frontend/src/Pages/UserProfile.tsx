@@ -171,12 +171,7 @@ function UserProfile() {
     setCurrentPage(event.selected + 1);
   };
 
-  useEffect(() => {
-    const userJson = localStorage.getItem('user-info');
-    if (!userJson) {
-      navigate('/signup');
-    }
-  }, [navigate]);
+  
 
   useEffect(() => {
     if (data) {

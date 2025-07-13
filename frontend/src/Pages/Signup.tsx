@@ -50,7 +50,7 @@ export default function Signup() {
       image: imageUrl,
     });
     dispatch({ type: 'sign-in', payload: res.user });
-    localStorage.setItem('user-token', res.token);
+    
     navigate('/');
   };
 
