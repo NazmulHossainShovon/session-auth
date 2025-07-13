@@ -12,10 +12,7 @@ export const useSignupMutation = () =>
     }) => {
       const res = await apiClient.post<{ user: User; token: string }>(
         'api/users/signup',
-        userInfo,
-        {
-          withCredentials: true,
-        }
+        userInfo
       );
       return res.data;
     },
@@ -35,9 +32,6 @@ export const useSigninMutation = () =>
         {
           email,
           password,
-        },
-        {
-          withCredentials: true,
         }
       );
       return res.data;
@@ -50,7 +44,6 @@ export const useGetUserInfo = (userName: string | undefined) =>
     queryFn: async () => {
       const res = await apiClient.get<User>('api/users', {
         params: { userName },
-        withCredentials: true,
       });
       return res.data;
     },
@@ -62,7 +55,6 @@ export const useSearchUsers = (query: string) =>
     queryFn: async () => {
       const res = await apiClient.get<People[]>('api/search', {
         params: { query },
-        withCredentials: true,
       });
       return res.data;
     },
@@ -82,8 +74,7 @@ export const useSendFriendRequest = () => {
         {
           sender,
           receiver,
-        },
-        { withCredentials: true }
+        }
       );
       return res.data;
     },
@@ -104,8 +95,7 @@ export const useCancelFriendRequest = () => {
         {
           sender,
           receiver,
-        },
-        { withCredentials: true }
+        }
       );
       return res.data;
     },
@@ -126,8 +116,7 @@ export const useAcceptFriendRequest = () => {
         {
           sender,
           receiver,
-        },
-        { withCredentials: true }
+        }
       );
       return res.data;
     },
@@ -148,8 +137,7 @@ export const useUnfriend = () => {
         {
           user1,
           user2,
-        },
-        { withCredentials: true }
+        }
       );
       return res.data;
     },
