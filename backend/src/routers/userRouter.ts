@@ -44,7 +44,6 @@ userRouter.get(
 
 userRouter.get(
   "/current",
-  isAuth,
   asyncHandler(async (req: Request, res: Response) => {
     if (req.session.user) {
       const user = await UserModel.findById(req.session.user._id).select(
