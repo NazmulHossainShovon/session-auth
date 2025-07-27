@@ -10,7 +10,7 @@ import s3Router from "./routers/s3Router";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import session from "express-session";
-import connectMongoDBSession from "connect-mongodb-session";
+import MongoStore from "connect-mongo";
 
 export const userSocketMap = new Map<string, string>();
 
@@ -25,10 +25,9 @@ mongoose
     console.log("error mongodb");
   });
 
-const MongoDBStore = connectMongoDBSession(session);
-const store = new MongoDBStore({
-  uri: MONGODB_URI,
-  collection: "sessions",
+const store = MongoStore.create({
+  mongoUrl: MONGODB_URI,
+  collectionName: "sessions",
 });
 
 const app = express();
@@ -52,7 +51,7 @@ app.use(
     rolling: true,
     store: store,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 2,
+      maxAge: 172800000, // 2 days
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
